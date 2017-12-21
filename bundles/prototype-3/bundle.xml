@@ -1,0 +1,67 @@
+<!-- simple dumbbell with two SDN-switches -->
+<bundle name="prototype-3" bundle-version="1.1" format-version="0.2">
+    <parameters>
+        <parameter name="key" value="value" />
+    </parameters>
+    <topology>
+        <nodegroups>
+            <group name="ofSwitch" type="ofSwitch" controller="controller1" />
+            <group name="ofController" type="ofController" />
+            <group name="genericSwitch" type="genericSwitch" />
+            <group name="host" type="host" />
+            <group name="sourceHost" type="host" />
+            <group name="targetHost" type="host" />
+        </nodegroups>
+        <linkgroups>
+            <group name="leftSide" />
+            <group name="rightSide" />
+            <group name="wanky" />
+        </linkgroups>
+        <interfacegroups>
+        </interfacegroups>
+        <nodes>
+            <node name="controller1" type="ofController" pos-x="15" pos-y="5" controller="controller1" >
+                <interface name="ofCtrlLink" />
+            </node>
+            <node name="switch1" type="ofSwitch" groups="ofSwitch" pos-x="15" pos-y="15">
+                <interface name="s1OfCtrlUplink" type="control" />
+                <interface name="s1i1" />
+                <interface name="s1i2" />
+                <interface name="s1InterConnect" />
+            </node>
+            <node name="switch2" type="ofSwitch" groups="ofSwitch" pos-x="25" pos-y="15">
+                <interface name="s2OfCtrlUplink" type="control" />
+                <interface name="s2i1" />
+                <interface name="s2i2" />
+                <interface name="s2InterConnect" />
+            </node>
+            <node name="host1" type="host" groups="host sourceHost" pos-x="5" pos-y="5">
+                <interface name="h1i1" />
+            </node>
+            <node name="host2" type="host" groups="host sourceHost" pos-x="5" pos-y="25">
+                <interface name="h2i1" />
+            </node>
+            <node name="host3" type="host" groups="host targetHost" pos-x="35" pos-y="5">
+                <interface name="h3i1" />
+            </node>
+            <node name="host4" type="host" groups="host targetHost" pos-x="35" pos-y="25">
+                <interface name="h4i1" />
+            </node>
+        </nodes>
+        <links>
+            <link name="ls1iofCtrl" a="s1OfCtrlUplink" b="ofCtrlLink" bandwidth="1Gbps" delay="3ms" />
+            <link name="ls2iofCtrl" a="s2OfCtrlUplink" b="ofCtrlLink" bandwidth="1Gbps" delay="3ms" />
+            <link name="lh1s1" groups="leftSide" a="h1i1" b="s1i1" bandwidth="100Mbps" delay="10ms" />
+            <link name="lh2s1" groups="leftSide" a="h2i1" b="s1i2" bandwidth="100Mbps" delay="10ms" />
+            <link name="ls1s2" a="s1InterConnect" b="s2InterConnect" bandwidth="1Gbps" delay="0.1ms" />
+            <link name="ls2h3" groups="rightSide" a="s2i1" b="h3i1" bandwidth="100Mbps" delay="5ms" />
+            <link name="ls2h4" groups="rightSide wanky" a="s2i2" b="h4i1" bandwidth="100Mbps" delay="5ms" error-rate="1" />
+        </links>
+    </topology>
+    <schedule>
+        <bulk-event start="1.5s" source="host1" destination="host3" max-size="5Mbyte" />
+        <bulk-event start="1.7s" source="host2" destination="host4" max-size="5Mbyte" />
+        <link-state-change-event start="1.9s" link="ls2h4" state="off" />
+        <link-state-change-event start="4.0s" link="ls2h4" state="on" />
+    </schedule>
+</bundle>

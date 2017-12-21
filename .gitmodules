@@ -1,0 +1,6 @@
+[submodule "controllers/pox/pox"]
+	path = controllers/pox/pox
+	url = https://github.com/noxrepo/pox
+[submodule "controllers/ryu/ryu"]
+	path = controllers/ryu/ryu
+	url = https://github.com/osrg/ryu.git

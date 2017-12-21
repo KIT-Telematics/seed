@@ -1,0 +1,22 @@
+<data>
+  <cdf name="http-reply-size" x-scale="log">
+    <point x="10" p="0.0"/>
+    <point x="100" p="0.06"/>
+    <point x="1000" p="0.4"/>
+    <point x="10000" p="0.8"/>
+    <point x="100000" p="0.97"/>
+    <point x="1000000" p="1.0"/>
+  </cdf>
+  <cdf name="email-size" x-scale="log">
+    <point x="1" p="0.0"/>
+    <point x="1000" p="0.2"/>
+    <point x="1000000" p="0.975"/>
+    <point x="1000000000" p="1.0"/>
+  </cdf>
+  <cdf name="bulk-size" x-scale="log">
+    <point x="100" p="0.0"/>
+    <point x="100" p="0.5"/>
+    <point x="10000" p="0.5"/>
+    <point x="10000" p="1.0"/>
+  </cdf>
+</data>

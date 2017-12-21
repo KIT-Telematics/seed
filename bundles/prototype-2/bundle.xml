@@ -1,0 +1,95 @@
+<!--
+
+         s___c
+    h1  /|\    h2
+     \ / | \  /
+     s1__|__s2
+      \  |  /
+       \ | /
+        \|/
+         s3
+         |
+         h3
+
+Simple triangle-topology to validate loop behaviour.
+-->
+<bundle name="prototype" bundle-version="1.1" format-version="0.2">
+    <parameters>
+        <parameter name="key" value="value" />
+    </parameters>
+    <topology>
+        <nodegroups>
+            <group name="ofSwitch" type="ofSwitch" controller="c"/>
+            <group name="ofController" type="ofController" />
+            <group name="genericSwitch" type="genericSwitch" />
+            <group name="host" type="host" />
+            <group name="sourceHost" />
+            <group name="targetHost" />
+        </nodegroups>
+        <linkgroups>
+            <group name="leftSide" />
+            <group name="rightSide" />
+            <group name="wanky" />
+        </linkgroups>
+        <interfacegroups>
+        </interfacegroups>
+        <nodes>
+            <node name="c" groups="ofController" controller="controller1">
+                <interface name="cis" />
+            </node>
+            <node name="s" groups="genericSwitch">
+                <interface name="sic" />
+                <interface name="si1" />
+                <interface name="si2" />
+                <interface name="si3" />
+            </node>
+            <node name="s1" groups="ofSwitch">
+                <interface name="s1is" type="control" />
+                <interface name="s1i2" />
+                <interface name="s1i3" />
+                <interface name="s1ih" />
+            </node>
+            <node name="s2" groups="ofSwitch">
+                <interface name="s2is" type="control" />
+                <interface name="s2i1" />
+                <interface name="s2i3" />
+                <interface name="s2ih" />
+            </node>
+            <node name="s3" groups="ofSwitch">
+                <interface name="s3is" type="control" />
+                <interface name="s3i1" />
+                <interface name="s3i2" />
+                <interface name="s3ih" />
+            </node>
+            <node name="h1" groups="host sourceHost">
+                <interface name="h1is" />
+            </node>
+            <node name="h2" groups="host sourceHost">
+                <interface name="h2is" />
+            </node>
+            <node name="h3" groups="host targetHost">
+                <interface name="h3is" />
+            </node>
+        </nodes>
+        <links>
+            <link name="lsc" a="cis" b="sic" bandwidth="1Gbps" delay="1ms" />
+
+            <link name="ls1c" a="si1" b="s1is" bandwidth="1Gbps" delay="1ms" />
+            <link name="ls2c" a="si2" b="s2is" bandwidth="1Gbps" delay="1ms" />
+            <link name="ls3c" a="si3" b="s3is" bandwidth="1Gbps" delay="1ms" />
+
+            <link name="ls1s" a="s1i2" b="s2i1" bandwidth="1Gbps" delay="1ms" />
+            <link name="ls2s" a="s2i3" b="s3i2" bandwidth="1Gbps" delay="1ms" />
+            <link name="ls3s" a="s3i1" b="s1i3" bandwidth="1Gbps" delay="1ms" />
+
+            <link name="ls1h" a="s1ih" b="h1is" bandwidth="1Gbps" delay="1ms" />
+            <link name="ls2h" a="s2ih" b="h2is" bandwidth="1Gbps" delay="1ms" />
+            <link name="ls3h" a="s3ih" b="h3is" bandwidth="1Gbps" delay="1ms" />
+        </links>
+    </topology>
+    <schedule>
+        <process fire="exp(2s)" max-repeat="4">
+          <bulk-event start="uniform(1s,2s)" source="sample(sourceHost)" destination="sample(targetHost)" max-size="pareto(1Mbyte,0.8)" />
+        </process>
+    </schedule>
+</bundle>

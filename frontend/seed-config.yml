@@ -1,0 +1,38 @@
+bundle:
+    path: "../bundles/"
+
+controller:
+    ctrl1:
+        name: "ns3"
+        path: "../controllers/pox-1.0/pox.py"
+        pathToStarter: "./starter.d/controller.d/pox.sh"
+        params: "{0} {1}" # path, app
+        port: 1337 # TODO use
+
+simulator:
+    ns3:
+        name: "ns3"
+        path: "../adapters/ns3/ns-allinone-3.26/ns-3.26/"
+        pathToStarter: "./starter.d/simulator.d/ns3.sh"
+        params: "{0} {1} {2} {3} {4}" # path, bundle, runtime
+
+    ns3docker:
+        name: "ns3docker"
+        path: "../adapters/ns3/"
+        pathToStarter: "./starter.d/simulator.d/ns3-docker.sh"
+        params: "{0} {1} {2} {3} {4}" # path, bundle, runtime
+
+    omnet:
+        name: "OMNeT++"
+        path: "../adapters/omnetpp/"
+        pathToStarter: "./starter.d/simulator.d/omnetpp.sh"
+        params: "{0} {1} {2} {3}"
+
+    mininet:
+        name: "Mininet"
+        path: "../adapters/mininet/"
+        pathToStarter: "./starter.d/simulator.d/mininet.sh"
+        params: "{0} {1} {2}"
+
+logging:
+    path: "../results"

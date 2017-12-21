@@ -1,0 +1,13 @@
+<schedule>
+  <process start="0.0" fire="interval(parameter(interarrival))">
+    <choice>
+      <event weight="5" start="0.0" type="traffic" generator="bulk" source="samplegroup(host)" destination="samplegroup(host)" size="samplecdf(email-size)"/>
+      <event weight="1" start="0.0" type="traffic" generator="bulk" source="samplegroup(host)" destination="samplegroup(host-wan)" size="samplecdf(email-size)"/>
+      <event weight="1" start="0.0" type="traffic" generator="bulk-respond" source="samplegroup(host)" destination="samplegroup(host-wan)" size="samplecdf(email-size)"/>
+      <event weight="2" start="0.0" type="traffic" generator="bulk-respond" source="samplegroup(host)" destination="samplegroup(host)" size="samplecdf(http-reply-size)"/>
+      <event weight="10" start="0.0" type="traffic" generator="bulk-respond" source="samplegroup(host)" destination="samplegroup(host-wan)" size="samplecdf(http-reply-size)"/>
+      <event weight="50" start="0.0" type="traffic" generator="udp-echo" source="samplegroup(host)" destination="samplegroup(host)" size="100byte"/>
+      <event weight="1" start="0.0" type="traffic" generator="bulk" source="samplegroup(host)" destination="samplegroup(host)" size="samplecdf(bulk-size)"/>
+    </choice>
+  </process>
+</schedule>

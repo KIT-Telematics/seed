@@ -1,0 +1,16 @@
+config:
+  bundle:
+    name: loadbalance
+    parameters: {}
+  adapter:
+    image: ns3
+    runtime: 10
+    seed: 1337
+  controllers:
+    controller1:
+      image: pox
+      applications: []
+      # applications: [forwarding.l2_learning_04]
+      # applications: [forwarding.ecmp]
+      # args: pbce.topo pbce.host pbce.short --timeout=10 pbce.pbce --lower=15 --upper=20 openflow proto.arp_responder --eat_packets=False  openflow.discovery
+      args: "foo"

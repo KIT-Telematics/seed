@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bundle name="DC over-spline">
+   <parameters />
+   <topology>
+      <nodegroups>
+         <group controller="localhost" name="ofSwitch" type="ofSwitch" />
+         <group name="spine_switch" />
+         <group name="aggregation_switch" />
+         <group name="tor_switch" />
+         <group name="switch" />
+         <group name="host" type="host" />
+         <group name="host_left" type="host" />
+         <group name="host_right" type="host" />
+         <group name="sender" type="host" />
+         <group name="receiver" type="host" />
+      </nodegroups>
+      <linkgroups>
+         <group bandwidth="10Mbps" delay="2ms" name="links" />
+      </linkgroups>
+      <interfacegroups />
+      <nodes>
+         <node name="sc" type="genericSwitch">
+            <interface name="scic" />
+            <interface name="sciss0" />
+            <interface name="sciss1" />
+            <interface name="scias0" />
+            <interface name="scias1" />
+            <interface name="scias2" />
+            <interface name="scias3" />
+            <interface name="scitors0" />
+            <interface name="scitors1" />
+            <interface name="scitors2" />
+            <interface name="scitors3" />
+            <interface name="foo" type="control" />
+         </node>
+         <node name="localhost" type="ofController" controller="localhost">
+            <interface name="ci" />
+         </node>
+         <node groups="spine_switch switch ofSwitch" name="ss0">
+            <interface name="ss0i0" />
+            <interface name="ss0i1" />
+            <interface name="ss0i2" />
+            <interface name="ss0i3" />
+            <interface name="ss0ic" type="control" />
+         </node>
+         <node groups="spine_switch switch ofSwitch" name="ss1">
+            <interface name="ss1i0" />
+            <interface name="ss1i1" />
+            <interface name="ss1i2" />
+            <interface name="ss1i3" />
+            <interface name="ss1ic" type="control" />
+         </node>
+         <node groups="aggregation_switch switch ofSwitch" name="as0">
+            <interface name="as0i0" />
+            <interface name="as0i1" />
+            <interface name="as0i2" />
+            <interface name="as0i3" />
+            <interface name="as0ic" type="control" />
+         </node>
+         <node groups="aggregation_switch switch ofSwitch" name="as1">
+            <interface name="as1i0" />
+            <interface name="as1i1" />
+            <interface name="as1i2" />
+            <interface name="as1i3" />
+            <interface name="as1ic" type="control" />
+         </node>
+         <node groups="aggregation_switch switch ofSwitch" name="as2">
+            <interface name="as2i0" />
+            <interface name="as2i1" />
+            <interface name="as2i2" />
+            <interface name="as2i3" />
+            <interface name="as2ic" type="control" />
+         </node>
+         <node groups="aggregation_switch switch ofSwitch" name="as3">
+            <interface name="as3i0" />
+            <interface name="as3i1" />
+            <interface name="as3i2" />
+            <interface name="as3i3" />
+            <interface name="as3ic" type="control" />
+         </node>
+         <node groups="tor_switch switch ofSwitch" name="tors0">
+            <interface name="tors0i0" />
+            <interface name="tors0i1" />
+            <interface name="tors0i2" />
+            <interface name="tors0i3" />
+            <interface name="tors0i4" />
+            <interface name="tors0i5" />
+            <interface name="tors0i6" />
+            <interface name="tors0i7" />
+            <interface name="tors0i8" />
+            <interface name="tors0i9" />
+            <interface name="tors0ic" type="control" />
+         </node>
+         <node groups="tor_switch switch ofSwitch" name="tors1">
+            <interface name="tors1i0" />
+            <interface name="tors1i1" />
+            <interface name="tors1i2" />
+            <interface name="tors1i3" />
+            <interface name="tors1i4" />
+            <interface name="tors1i5" />
+            <interface name="tors1i6" />
+            <interface name="tors1i7" />
+            <interface name="tors1i8" />
+            <interface name="tors1i9" />
+            <interface name="tors1ic" type="control" />
+         </node>
+         <node groups="tor_switch switch ofSwitch" name="tors2">
+            <interface name="tors2i0" />
+            <interface name="tors2i1" />
+            <interface name="tors2i2" />
+            <interface name="tors2i3" />
+            <interface name="tors2i4" />
+            <interface name="tors2i5" />
+            <interface name="tors2i6" />
+            <interface name="tors2i7" />
+            <interface name="tors2i8" />
+            <interface name="tors2i9" />
+            <interface name="tors2ic" type="control" />
+         </node>
+         <node groups="tor_switch switch ofSwitch" name="tors3">
+            <interface name="tors3i0" />
+            <interface name="tors3i1" />
+            <interface name="tors3i2" />
+            <interface name="tors3i3" />
+            <interface name="tors3i4" />
+            <interface name="tors3i5" />
+            <interface name="tors3i6" />
+            <interface name="tors3i7" />
+            <interface name="tors3i8" />
+            <interface name="tors3i9" />
+            <interface name="tors3ic" type="control" />
+         </node>
+         <node groups="host_left host" name="host0">
+            <interface name="host0i0" />
+         </node>
+         <node groups="host_left host" name="host1">
+            <interface name="host1i0" />
+         </node>
+         <node groups="host_left host" name="host2">
+            <interface name="host2i0" />
+         </node>
+         <node groups="host_left host" name="host3">
+            <interface name="host3i0" />
+         </node>
+         <node groups="host_left host" name="host4">
+            <interface name="host4i0" />
+         </node>
+         <node groups="host_left host" name="host5">
+            <interface name="host5i0" />
+         </node>
+         <node groups="host_left host" name="host6">
+            <interface name="host6i0" />
+         </node>
+         <node groups="host_left host" name="host7">
+            <interface name="host7i0" />
+         </node>
+         <node groups="host_left host" name="host8">
+            <interface name="host8i0" />
+         </node>
+         <node groups="host_left host" name="host9">
+            <interface name="host9i0" />
+         </node>
+         <node groups="host_left host" name="host10">
+            <interface name="host10i0" />
+         </node>
+         <node groups="host_left host" name="host11">
+            <interface name="host11i0" />
+         </node>
+         <node groups="host_left host" name="host12">
+            <interface name="host12i0" />
+         </node>
+         <node groups="host_left host" name="host13">
+            <interface name="host13i0" />
+         </node>
+         <node groups="host_left host" name="host14">
+            <interface name="host14i0" />
+         </node>
+         <node groups="host_left host" name="host15">
+            <interface name="host15i0" />
+         </node>
+         <node groups="host_right host" name="host16">
+            <interface name="host16i0" />
+         </node>
+         <node groups="host_right host" name="host17">
+            <interface name="host17i0" />
+         </node>
+         <node groups="host_right host" name="host18">
+            <interface name="host18i0" />
+         </node>
+         <node groups="host_right host" name="host19">
+            <interface name="host19i0" />
+         </node>
+         <node groups="host_right host" name="host20">
+            <interface name="host20i0" />
+         </node>
+         <node groups="host_right host" name="host21">
+            <interface name="host21i0" />
+         </node>
+         <node groups="host_right host" name="host22">
+            <interface name="host22i0" />
+         </node>
+         <node groups="host_right host" name="host23">
+            <interface name="host23i0" />
+         </node>
+         <node groups="host_right host" name="host24">
+            <interface name="host24i0" />
+         </node>
+         <node groups="host_right host" name="host25">
+            <interface name="host25i0" />
+         </node>
+         <node groups="host_right host" name="host26">
+            <interface name="host26i0" />
+         </node>
+         <node groups="host_right host" name="host27">
+            <interface name="host27i0" />
+         </node>
+         <node groups="host_right host" name="host28">
+            <interface name="host28i0" />
+         </node>
+         <node groups="host_right host" name="host29">
+            <interface name="host29i0" />
+         </node>
+         <node groups="host_right host" name="host30">
+            <interface name="host30i0" />
+         </node>
+         <node groups="host_right host" name="host31">
+            <interface name="host31i0" />
+         </node>
+      </nodes>
+      <links>
+         <link a="ci" b="scic" bandwidth="10Mbps" groups="links" name="lscc" />
+         <link a="sciss0" b="ss0ic" bandwidth="10Mbps" groups="links" name="lss0c" />
+         <link a="sciss1" b="ss1ic" bandwidth="10Mbps" groups="links" name="lss1c" />
+         <link a="as0i0" b="ss0i0" bandwidth="10Mbps" groups="links" name="las0ss0" />
+         <link a="as0i1" b="ss1i0" bandwidth="10Mbps" groups="links" name="las0ss1" />
+         <link a="scias0" b="as0ic" bandwidth="10Mbps" groups="links" name="las0c" />
+         <link a="as1i0" b="ss0i1" bandwidth="10Mbps" groups="links" name="las1ss0" />
+         <link a="as1i1" b="ss1i1" bandwidth="10Mbps" groups="links" name="las1ss1" />
+         <link a="scias1" b="as1ic" bandwidth="10Mbps" groups="links" name="las1c" />
+         <link a="as2i0" b="ss0i2" bandwidth="10Mbps" groups="links" name="las2ss0" />
+         <link a="as2i1" b="ss1i2" bandwidth="10Mbps" groups="links" name="las2ss1" />
+         <link a="scias2" b="as2ic" bandwidth="10Mbps" groups="links" name="las2c" />
+         <link a="as3i0" b="ss0i3" bandwidth="10Mbps" groups="links" name="las3ss0" />
+         <link a="as3i1" b="ss1i3" bandwidth="10Mbps" groups="links" name="las3ss1" />
+         <link a="scias3" b="as3ic" bandwidth="10Mbps" groups="links" name="las3c" />
+         <link a="tors0i0" b="as0i2" groups="links" name="ltors0as0" />
+         <link a="tors0i1" b="as1i3" groups="links" name="ltors0as1" />
+         <link a="scitors0" b="tors0ic" bandwidth="10Mbps" groups="links" name="ltors0c" />
+         <link a="tors1i0" b="as0i3" groups="links" name="ltors1as0" />
+         <link a="tors1i1" b="as1i2" groups="links" name="ltors1as1" />
+         <link a="scitors1" b="tors1ic" bandwidth="10Mbps" groups="links" name="ltors1c" />
+         <link a="tors2i0" b="as2i2" groups="links" name="ltors2as2" />
+         <link a="tors2i1" b="as3i3" groups="links" name="ltors2as3" />
+         <link a="scitors2" b="tors2ic" bandwidth="10Mbps" groups="links" name="ltors2c" />
+         <link a="tors3i0" b="as2i3" groups="links" name="ltors3as2" />
+         <link a="tors3i1" b="as3i2" groups="links" name="ltors3as3" />
+         <link a="scitors3" b="tors3ic" bandwidth="10Mbps" groups="links" name="ltors3c" />
+         <link a="host0i0" b="tors0i2" groups="links" name="lhost0tors0" />
+         <link a="host1i0" b="tors0i3" groups="links" name="lhost1tors0" />
+         <link a="host2i0" b="tors0i4" groups="links" name="lhost2tors0" />
+         <link a="host3i0" b="tors0i5" groups="links" name="lhost3tors0" />
+         <link a="host4i0" b="tors0i6" groups="links" name="lhost4tors0" />
+         <link a="host5i0" b="tors0i7" groups="links" name="lhost5tors0" />
+         <link a="host6i0" b="tors0i8" groups="links" name="lhost6tors0" />
+         <link a="host7i0" b="tors0i9" groups="links" name="lhost7tors0" />
+         <link a="host8i0" b="tors1i2" groups="links" name="lhost8tors1" />
+         <link a="host9i0" b="tors1i3" groups="links" name="lhost9tors1" />
+         <link a="host10i0" b="tors1i4" groups="links" name="lhost10tors1" />
+         <link a="host11i0" b="tors1i5" groups="links" name="lhost11tors1" />
+         <link a="host12i0" b="tors1i6" groups="links" name="lhost12tors1" />
+         <link a="host13i0" b="tors1i7" groups="links" name="lhost13tors1" />
+         <link a="host14i0" b="tors1i8" groups="links" name="lhost14tors1" />
+         <link a="host15i0" b="tors1i9" groups="links" name="lhost15tors1" />
+         <link a="host16i0" b="tors2i2" groups="links" name="lhost16tors2" />
+         <link a="host17i0" b="tors2i3" groups="links" name="lhost17tors2" />
+         <link a="host18i0" b="tors2i4" groups="links" name="lhost18tors2" />
+         <link a="host19i0" b="tors2i5" groups="links" name="lhost19tors2" />
+         <link a="host20i0" b="tors2i6" groups="links" name="lhost20tors2" />
+         <link a="host21i0" b="tors2i7" groups="links" name="lhost21tors2" />
+         <link a="host22i0" b="tors2i8" groups="links" name="lhost22tors2" />
+         <link a="host23i0" b="tors2i9" groups="links" name="lhost23tors2" />
+         <link a="host24i0" b="tors3i2" groups="links" name="lhost24tors3" />
+         <link a="host25i0" b="tors3i3" groups="links" name="lhost25tors3" />
+         <link a="host26i0" b="tors3i4" groups="links" name="lhost26tors3" />
+         <link a="host27i0" b="tors3i5" groups="links" name="lhost27tors3" />
+         <link a="host28i0" b="tors3i6" groups="links" name="lhost28tors3" />
+         <link a="host29i0" b="tors3i7" groups="links" name="lhost29tors3" />
+         <link a="host30i0" b="tors3i8" groups="links" name="lhost30tors3" />
+         <link a="host31i0" b="tors3i9" groups="links" name="lhost31tors3" />
+      </links>
+   </topology>
+   <schedule>
+      <bulk-event destination="host16" max-size="5Mbyte" source="sample(host_left)" start="0s" />
+      <bulk-event destination="host16" max-size="5Mbyte" source="sample(host_left)" start="0s" />
+      <bulk-event destination="host16" max-size="5Mbyte" source="sample(host_left)" start="0s" />
+      <bulk-event destination="host16" max-size="5Mbyte" source="sample(host_left)" start="0s" />
+      <bulk-event destination="host16" max-size="5Mbyte" source="sample(host_left)" start="0s" />
+      <bulk-event destination="host16" max-size="5Mbyte" source="sample(host_left)" start="0s" />
+      <bulk-event destination="host16" max-size="5Mbyte" source="sample(host_left)" start="0s" />
+      <bulk-event destination="host16" max-size="5Mbyte" source="sample(host_left)" start="0s" />
+      <bulk-event destination="host16" max-size="5Mbyte" source="sample(host_left)" start="0s" />
+   </schedule>
+</bundle>

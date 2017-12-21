@@ -1,0 +1,180 @@
+<!-- IXP as bigswitch-model + independent AS-switch -->
+<bundle name="ixp2" bundle-version="1.1" format-version="0.2">
+    <parameters>
+        <parameter name="key" value="value" />
+    </parameters>
+    <topology>
+        <nodegroups>
+            <group name="ofSwitch" type="ofSwitch" />
+            <group name="ofController" type="ofController" />
+            <!-- <group name="genericSwitch" type="genericSwitch" /> -->
+            <group name="host" type="host" />
+            <group name="Ahost" type="host" />
+            <group name="Bhost" type="host" />
+            <group name="Chost" type="host" />
+            <group name="Dhost" type="host" />
+            <!-- <group name="sourceHost" type="host" /> -->
+            <!-- <group name="targetHost" type="host" /> -->
+        </nodegroups>
+        <linkgroups>
+            <!-- <group name="leftSide" /> -->
+            <!-- <group name="rightSide" /> -->
+            <!-- <group name="wanky" /> -->
+            <!-- <group name="secondLink" /> -->
+        </linkgroups>
+        <interfacegroups>
+        </interfacegroups>
+        <nodes>
+            <!-- central ctrl -->
+            <node name="c1" type="ofController" pos-x="50" pos-y="50" controller="controller1">
+                <interface name="c1icentral" />
+                <interface name="c1iA" />
+                <interface name="c1iB" />
+                <interface name="c1iC" />
+                <interface name="c1iD" />
+            </node>
+            <node name="s1" type="ofSwitch" groups="ofSwitch" pos-x="50" pos-y="47">
+                <interface name="s1icentral" type="control" />
+                <interface name="s1iA" />
+                <interface name="s1iB" />
+                <interface name="s1iC" />
+                <interface name="s1iD" />
+            </node>
+
+
+            <!-- AS "A" -->
+            <node name="cA" type="ofController" pos-x="25" pos-y="22" controller="controllerA">
+                <interface name="cAic" />
+            </node>
+            <node name="sA" type="ofSwitch" groups="ofSwitch" pos-x="25" pos-y="25">
+                <interface name="sAic" type="control" />
+                <interface name="sAiUP" />
+                <interface name="sAi1" />
+                <interface name="sAi2" />
+                <interface name="sAi3" />
+            </node>
+            <node name="A1" type="host" groups="host Ahost" pos-x="20" pos-y="30">
+                <interface name="A1i1" />
+            </node>
+            <node name="A2" type="host" groups="host Ahost" pos-x="25" pos-y="30">
+                <interface name="A2i1" />
+            </node>
+            <node name="A3" type="host" groups="host Ahost" pos-x="30" pos-y="30">
+                <interface name="A3i1" />
+            </node>
+
+
+            <!-- AS "B" -->
+            <node name="cB" type="ofController" pos-x="25" pos-y="72" controller="controllerB">
+                <interface name="cBic" />
+            </node>
+            <node name="sB" type="ofSwitch" groups="ofSwitch" pos-x="25" pos-y="75">
+                <interface name="sBic" type="control" />
+                <interface name="sBiUP" />
+                <interface name="sBi1" />
+                <interface name="sBi2" />
+                <interface name="sBi3" />
+            </node>
+            <node name="B1" type="host" groups="host Bhost" pos-x="20" pos-y="80">
+                <interface name="B1i1" />
+            </node>
+            <node name="B2" type="host" groups="host Bhost" pos-x="25" pos-y="80">
+                <interface name="B2i1" />
+            </node>
+            <node name="B3" type="host" groups="host Bhost" pos-x="30" pos-y="80">
+                <interface name="B3i1" />
+            </node>
+
+
+
+            <!-- AS "C" -->
+            <node name="cC" type="ofController" pos-x="75" pos-y="22" controller="controllerC">
+                <interface name="cCic" />
+            </node>
+            <node name="sC" type="ofSwitch" groups="ofSwitch" pos-x="75" pos-y="25">
+                <interface name="sCic" type="control" />
+                <interface name="sCiUP" />
+                <interface name="sCi1" />
+                <interface name="sCi2" />
+                <interface name="sCi3" />
+            </node>
+            <node name="C1" type="host" groups="host Chost" pos-x="70" pos-y="30">
+                <interface name="C1i1" />
+            </node>
+            <node name="C2" type="host" groups="host Chost" pos-x="75" pos-y="30">
+                <interface name="C2i1" />
+            </node>
+            <node name="C3" type="host" groups="host Chost" pos-x="80" pos-y="30">
+                <interface name="C3i1" />
+            </node>
+
+
+
+
+            <!-- AS "D" -->
+            <node name="cD" type="ofController" pos-x="75" pos-y="72" controller="controllerD">
+                <interface name="cDic" />
+            </node>
+            <node name="sD" type="ofSwitch" groups="ofSwitch" pos-x="75" pos-y="75">
+                <interface name="sDic" type="control" />
+                <interface name="sDiUP" />
+                <interface name="sDi1" />
+                <interface name="sDi2" />
+                <interface name="sDi3" />
+            </node>
+            <node name="D1" type="host" groups="host Dhost" pos-x="70" pos-y="80">
+                <interface name="D1i1" />
+            </node>
+            <node name="D2" type="host" groups="host Dhost" pos-x="75" pos-y="80">
+                <interface name="D2i1" />
+            </node>
+            <node name="D3" type="host" groups="host Dhost" pos-x="80" pos-y="80">
+                <interface name="D3i1" />
+            </node>
+        </nodes>
+        <links>
+            <!-- switch<>ctrls -->
+            <link name="SofConnect" a="c1icentral" b="s1icentral" bandwidth="1Gbps" delay="0.1ms" />
+            <!-- <link name="AofConnect" a="c1iA" b="sAic" bandwidth="1Gbps" delay="0.1ms" /> -->
+            <!-- <link name="BofConnect" a="c1iB" b="sBic" bandwidth="1Gbps" delay="0.1ms" /> -->
+            <!-- <link name="CofConnect" a="c1iC" b="sCic" bandwidth="1Gbps" delay="0.1ms" /> -->
+            <!-- <link name="DofConnect" a="c1iD" b="sDic" bandwidth="1Gbps" delay="0.1ms" /> -->
+            <link name="AofConnect" a="cAic" b="sAic" bandwidth="1Gbps" delay="0.1ms" />
+            <link name="BofConnect" a="cBic" b="sBic" bandwidth="1Gbps" delay="0.1ms" />
+            <link name="CofConnect" a="cCic" b="sCic" bandwidth="1Gbps" delay="0.1ms" />
+            <link name="DofConnect" a="cDic" b="sDic" bandwidth="1Gbps" delay="0.1ms" />
+
+            <!-- AS-switches to central switch -->
+            <link name="s1sA" a="sAiUP" b="s1iA" bandwidth="1Gbps" delay="1ms" />
+            <link name="s1sB" a="sBiUP" b="s1iB" bandwidth="1Gbps" delay="1ms" />
+            <link name="s1sC" a="sCiUP" b="s1iC" bandwidth="1Gbps" delay="1ms" />
+            <link name="s1sD" a="sDiUP" b="s1iD" bandwidth="1Gbps" delay="1ms" />
+
+            <!-- AS switch A to hosts-->
+            <link name="lA1cA" a="A1i1" b="sAi1" bandwidth="1Gbps" delay="5ms" />
+            <link name="lA2cA" a="A2i1" b="sAi2" bandwidth="1Gbps" delay="5ms" />
+            <link name="lA3cA" a="A3i1" b="sAi3" bandwidth="1Gbps" delay="5ms" />
+
+            <!-- AS switch B to hosts-->
+            <link name="lB1cB" a="B1i1" b="sBi1" bandwidth="1Gbps" delay="5ms" />
+            <link name="lB2cB" a="B2i1" b="sBi2" bandwidth="1Gbps" delay="5ms" />
+            <link name="lB3cB" a="B3i1" b="sBi3" bandwidth="1Gbps" delay="5ms" />
+
+            <!-- AS switch C to hosts-->
+            <link name="lC1cC" a="C1i1" b="sCi1" bandwidth="1Gbps" delay="5ms" />
+            <link name="lC2cC" a="C2i1" b="sCi2" bandwidth="1Gbps" delay="5ms" />
+            <link name="lC3cC" a="C3i1" b="sCi3" bandwidth="1Gbps" delay="5ms" />
+
+            <!-- AS switch D to hosts-->
+            <link name="lD1cD" a="D1i1" b="sDi1" bandwidth="1Gbps" delay="5ms" />
+            <link name="lD2cD" a="D2i1" b="sDi2" bandwidth="1Gbps" delay="5ms" />
+            <link name="lD3cD" a="D3i1" b="sDi3" bandwidth="1Gbps" delay="5ms" />
+        </links>
+    </topology>
+    <schedule>
+        <bulk-event start="1.5s" source="A1" destination="D2" max-size="5Mbyte" />
+        <bulk-event start="1.5s" source="A1" destination="C1" max-size="5Mbyte" />
+        <bulk-event start="1.5s" source="B3" destination="B1" max-size="5Mbyte" />
+        <bulk-event start="1.5s" source="B3" destination="D2" max-size="5Mbyte" />
+    </schedule>
+</bundle>

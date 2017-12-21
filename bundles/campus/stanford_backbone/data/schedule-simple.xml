@@ -1,0 +1,13 @@
+<schedule>
+  <process start="10.0s" fire="interval(1s)" max-repeat="1">
+    <choice>
+      <bulk-event weight="5" start="0.0s" source="sample(host)" destination="sample(host)" max-size="100Kbyte"/>
+      <bulk-event weight="1" start="0.0s" source="sample(host)" destination="sample(host-wan)" max-size="100Kbyte"/>
+      <bulk-event weight="1" start="0.0s" source="sample(host)" destination="sample(host-wan)" max-size="100Kbyte"/>
+      <bulk-event weight="2" start="0.0s" source="sample(host)" destination="sample(host)" max-size="1Mbyte"/>
+      <bulk-event weight="10" start="0.0s" source="sample(host)" destination="sample(host-wan)" max-size="1Mbyte"/>
+      <bulk-event weight="50" start="0.0s" source="sample(host)" destination="sample(host)" max-size="100byte"/>
+      <bulk-event weight="1" start="0.0s" source="sample(host)" destination="sample(host)" max-size="2Mbyte"/>
+    </choice>
+  </process>
+</schedule>

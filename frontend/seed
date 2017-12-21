@@ -1,0 +1,237 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""SEED (Shared Evaluation Environment for SDN-Applications)"""
+
+
+# The source code of this software has been developed by:
+#
+# Karlsruhe Institute of Technology
+# Institute of Telematics
+# Zirkel 2, 76131 Karlsruhe
+# Germany
+#
+# with contributions from some individuals, listed in 'AUTHORS.txt'.
+#
+# The software is licensed under the "BSD 2-Clause License":
+#
+# --------------------------------------------------------------------------------
+#
+# Copyright (c) 2017,
+# Karlsruhe Institute of Technology, Institute of Telematics
+#
+# Redistribution and use in source and binary forms, with or without modification,
+# are permitted provided that the following conditions are met:
+#
+# 1. Redistributions of source code must retain the above copyright notice, this
+# list of conditions and the following disclaimer.
+#
+# 2. Redistributions in binary form must reproduce the above copyright notice,
+# this list of conditions and the following disclaimer in the documentation and/or
+# other materials provided with the distribution.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+# ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+# WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+# ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+# (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+# LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+# ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+# SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+import argparse
+import yaml
+import io
+import os
+import subprocess
+import sys
+import time
+
+# constants
+SEED_VERSION = "0.1"
+SEED_FORMAT_VERSION = "0.1"
+
+
+# default values
+DEFAULT_CONFIG_FILE = "./seed-config.yml"
+DEFAULT_BUNDLE = "prototype" # gets transformed into "${PATH}prototype/prototype.xml"
+DEFAULT_RANDOM_SEED = 1337
+DEFAULT_APP = "forwarding.l2_learning_04" # from POX
+DEFAULT_SIMULATOR = "ns3"
+DEFAULT_RUNTIME = 60 # in seconds
+
+class SEED():
+    def __init__(self):
+        self.run()
+        sys.exit(0)
+
+    def run(self):
+        FNULL = open(os.devnull, 'w')
+        startTime = time.time()
+
+        with open(DEFAULT_CONFIG_FILE, 'r') as stream:
+            config = yaml.load(stream)
+
+        options = self.parse_options()
+
+        if(options.showVersion):
+            print("SEED: " + SEED_VERSION)
+            print("Bundle-Fromat: " + SEED_FORMAT_VERSION)
+            return
+
+        print("[SEED]")
+        print("Running Shared Evaluation Environment for SDN-Applications (SEED) v" + SEED_VERSION)
+        print(" ")
+
+        # logging directory
+        loggingPath = os.path.abspath(os.path.expanduser(config['logging']['path']))
+        if(not os.access(loggingPath, os.W_OK)):
+            print("Error: Logging path \"" + loggingPath + "\" not writable")
+            sys.exit(1)
+
+        # bundle
+        bundlePath = os.path.abspath(os.path.expanduser(config['bundle']['path']))
+        bundleFile = bundlePath + "/" + options.bundle + "/" + os.path.basename(options.bundle) + ".xml"
+        if(not os.access(bundleFile, os.R_OK)):
+            print("Error: Bundle \"" + bundleFile + "\" not readable")
+            sys.exit(1)
+
+        # controller
+        bindingsFile = bundlePath + "/" + options.bundle + "/" + os.path.basename(options.bundle) + ".controller-bindings.yml"
+        if(not os.access(bindingsFile, os.R_OK)):
+            print("Error: Bindings-File \"" + bindingsFile + "\" not readable")
+            sys.exit(1)
+
+
+        print("[Bundle]")
+        print("=> Path to bundles: " + bundlePath)
+        print("=> Bundle name: \"" + options.bundle + "\"")
+        print(" ")
+
+        print("[Controller-Binding]")
+        print("=> Path to bindings: " + bindingsFile)
+        print(" ")
+
+        # ctrl + app
+        ctrlIndex = 0
+        print("[Starting SDN-Controllers and SDN-Apps]")
+        for ctrl in config['controller']:
+            #TODO ports for each ctrl
+            ctrlIndex += 1
+            controller = os.path.abspath(os.path.expanduser(config['controller'][ctrl]['path']))
+            #controllerPid = subprocess.Popen([controller, options.app], stdout=FNULL, stderr=subprocess.STDOUT)
+            controllerPid = subprocess.Popen([controller, options.app])
+            print("=> Controller: #" + str(ctrlIndex)+ "")
+            print("--> Controller: " + controller)
+            print("--> App: " + options.app)
+            print(" ")
+
+        if ctrlIndex < 1:
+            print("Error: No controller configured")
+            sys.exit(1)
+
+        # simulator
+        try:
+            simulatorStarterBin = os.path.abspath(os.path.expanduser(config['simulator'][options.simulator]['pathToStarter']))
+            simulatorPath = os.path.abspath(os.path.expanduser(config['simulator'][options.simulator]['path']))
+            starterRawParams = config['simulator'][options.simulator]['params']
+            starterParams = starterRawParams.format(simulatorPath, bundleFile, options.runtime, config['logging']['path'], bindingsFile).split(" ")
+        except KeyError:
+            print("Error: Simulator \"" + options.simulator + "\" not configured")
+            sys.exit(1)
+
+        print("[Executing Simulator]")
+        print("=> Using Simulator: " + config['simulator'][options.simulator]['name'])
+        print("--> Executing: " + simulatorPath)
+        print("--> With params: \n  -> " + "\n  -> ".join(starterParams))
+        print(" ")
+        if(options.verbose):
+            simulatorPid = subprocess.Popen([simulatorStarterBin] + starterParams)
+        else:
+            simulatorPid = subprocess.Popen([simulatorStarterBin] + starterParams, stdout=FNULL, stderr=subprocess.STDOUT)
+
+        # wait for simulator then terminate everything
+        simulatorPid.wait()
+        controllerPid.terminate()
+        simulatorPid.terminate()
+        endTime = time.time()
+        diffTime = endTime - startTime
+
+
+        print("[SEED done]")
+        print("--> Simulation done")
+        print("--> Stopping controller")
+        print("--> Simulation took {0:.2f} seconds".format(round(diffTime, 2)))
+        print("--> Logfiles are here: " + loggingPath)
+
+        # all done
+        sys.exit(0)
+        return 0
+
+
+
+    def parse_options(self):
+        parser = argparse.ArgumentParser()
+
+        parser.add_argument(
+                "-b",
+                "--bundle",
+                help="Path to bundle",
+                dest="bundle",
+                default=DEFAULT_BUNDLE)
+
+        parser.add_argument(
+                "-a",
+                "--app",
+                help="Name of SDN-App",
+                dest="app",
+                default=DEFAULT_APP)
+
+        parser.add_argument(
+                "-s",
+                "--simulator",
+                help="Simulator to use",
+                dest="simulator",
+                default=DEFAULT_SIMULATOR)
+
+        parser.add_argument(
+                "-r",
+                "--runtime",
+                help="Runtime",
+                dest="runtime",
+                type=int,
+                default=DEFAULT_RUNTIME)
+
+        parser.add_argument(
+                "-v",
+                "--verbose",
+                help="Be more verbose (show simulator output)",
+                dest="verbose",
+                action="store_true",
+                default=False)
+
+
+        parser.add_argument(
+                "--version",
+                help="Print version information",
+                action="store_true",
+                dest="showVersion",
+                default=False)
+
+        parser.add_argument(
+                "-z",
+                "--random-seed",
+                help="Random seed",
+                dest="randomSeed",
+                type=int,
+                default=DEFAULT_RANDOM_SEED)
+
+
+        options = parser.parse_args()
+        return options
+
+if __name__ == "__main__":
+    seed = SEED()
+    seed()

@@ -1,0 +1,15 @@
+version: '3'
+services:
+   mininet:
+        build: .
+        container_name: mininet
+        privileged: true
+        #ports:
+        #   -    "6633:6633"
+        volumes: 
+          -    ../../results/mininet:/home/mininet/result
+          -    ../../controllers:/home/mininet/conntroller
+          -    .:/home/mininet/seed
+        environment:
+                MININET_OPTIONS: --custom=/seed/seed.py
+    

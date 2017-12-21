@@ -1,0 +1,13 @@
+config:
+  bundle:
+    name: prototype-3
+    parameters: {}
+  adapter:
+    image: ns3
+    runtime: 10
+    seed: 1337
+  controllers:
+    controller1:
+      image: pox
+      applications: [pbce]
+      args: pbce.topo pbce.host pbce.short --timeout=10 pbce.pbce --lower=15 --upper=20 openflow proto.arp_responder --eat_packets=False  openflow.discovery

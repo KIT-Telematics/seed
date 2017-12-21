@@ -1,0 +1,39 @@
+# def options(opt):
+#     pass
+
+# def configure(conf):
+#     conf.check_nonfatal(header_name='stdint.h', define_name='HAVE_STDINT_H')
+
+def build(bld):
+    module = bld.create_ns3_module('seed', ['core', 'internet', 'network', 'point-to-point', 'applications'])
+    module.source = [
+        'model/seed-event.cpp',
+        'model/seed-event-link-change.cpp',
+        'model/seed-event-traffic-bulk.cpp',
+        'model/seed-node-group.cpp',
+        'model/seed-node.cpp',
+        'model/seed-link-group.cpp',
+        'model/seed-link.cpp',
+        'model/seed-interface-group.cpp',
+        'model/seed-interface.cpp',
+        'model/seed-parser.cpp'
+
+    ]
+
+    headers = bld(features=['ns3header'])
+    headers.module = 'seed'
+    headers.source = [
+        'model/rapidxml.hpp',
+        'model/seed-event-types.h',
+        'model/seed-event.h',
+        'model/seed-event-link-change.h',
+        'model/seed-event-traffic-bulk.h',
+        'model/seed-node-types.h',
+        'model/seed-node-group.h',
+        'model/seed-node.h',
+        'model/seed-link-group.h',
+        'model/seed-link.h',
+        'model/seed-interface-group.h',
+        'model/seed-interface.h',
+        'model/seed-parser.h'
+    ]

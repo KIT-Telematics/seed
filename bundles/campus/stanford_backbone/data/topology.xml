@@ -1,0 +1,14 @@
+<topology>
+  <nodegroups>
+    <group name="host" type="host" />
+    <group name="host-wan" type="host" />
+    <group name="openflow" type="ofSwitch" controller="n65536" />
+    <group name="controller" type="ofController" />
+    <group name="switch" type="genericSwitch" />
+  </nodegroups>
+  <linkgroups>
+    <group name="default" bandwidth="10Gbps" delay="1ms" />
+  </linkgroups>
+  <interfacegroups>
+  </interfacegroups>
+</topology>

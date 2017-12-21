@@ -1,0 +1,19 @@
+config:
+    bundle:
+        name: campus
+        parameters: {}
+    adapter:
+        image: ns3
+        runtime: 10
+        seed: 1337
+    controllers:
+        controller1:
+            image: ryu
+            applications: [ryu_13_pbce.py]
+            args: --observe-links ryu_13_pbce
+            config: |
+                [DEFAULT]
+                upper=60
+                lower=20
+                dc=30
+                timeout=2

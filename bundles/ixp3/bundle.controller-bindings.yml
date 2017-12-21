@@ -1,0 +1,13 @@
+controllers:
+    "controllerA":
+        ip: 0.0.0.0
+        port: 6654
+    "controllerB":
+        ip: 0.0.0.0
+        port: 6655
+    "controllerC":
+        ip: 0.0.0.0
+        port: 6656
+    "controllerD":
+        ip: 0.0.0.0
+        port: 6657

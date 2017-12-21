@@ -1,0 +1,108 @@
+import xml.etree.ElementTree as ET
+import xml.dom.minidom
+
+
+bundle = ET.Element('bundle',attrib={"name":"DC over-spline"})
+params = ET.SubElement(bundle,'parameters')
+topology = ET.Element('topology')
+nodegroups = ET.SubElement(topology,'nodegroups')
+linkgroups = ET.SubElement(topology,'linkgroups')
+interfacegroups = ET.SubElement(topology,'interfacegroups')
+hosts = ET.SubElement(topology,'nodes')
+links = ET.SubElement(topology,'links')
+
+bundle.append(topology)
+ET.SubElement(nodegroups, 'group', attrib={'name':"ofSwitch", 'type': 'ofSwitch', 'controller': "c"})
+ET.SubElement(nodegroups, 'group', attrib={'name':"spine_switch"})
+ET.SubElement(nodegroups, 'group', attrib={'name':'aggregation_switch'})
+ET.SubElement(nodegroups, 'group', attrib={'name':'tor_switch'})
+ET.SubElement(nodegroups, 'group', attrib={'name':'switch'})
+ET.SubElement(nodegroups, 'group', attrib={'name':'host', 'type': 'host'})
+ET.SubElement(nodegroups, 'group', attrib={'name':'host_left'})
+ET.SubElement(nodegroups, 'group', attrib={'name':'host_right'})
+ET.SubElement(nodegroups, 'group', attrib={'name':'sender'})
+ET.SubElement(nodegroups, 'group', attrib={'name':'receiver'})
+ET.SubElement(linkgroups, 'group', attrib={'name':'links', 'bandwidth': '10Mbps', 'delay': '2ms'})
+
+sc = ET.SubElement(hosts, 'node', attrib={'name':'sc', 'type':'genericSwitch'})
+
+c = ET.SubElement(hosts, 'node', attrib={'name':'c', 'type':'ofController'})
+ET.SubElement(c, 'interface', attrib={'name':'ci'})
+ET.SubElement(sc, 'interface', attrib={'name':'scic'})
+ET.SubElement(links, 'link', attrib={'name': "lscc", 'bandwidth':'10Mbps', 'groups':'links', 'a': "ci", 'b' : "scic"})
+
+#def build_fat_tree():
+for spine_switch_counter in range(2):
+        spine_switch = ET.SubElement(hosts,'node')
+        spine_switch.set('name', 'ss' + str(spine_switch_counter))
+        spine_switch.set('groups', 'spine_switch switch ofSwitch')
+        for i in range(4):
+            ET.SubElement(spine_switch, 'interface',
+                          attrib={'name': 'ss' + str(spine_switch_counter) + "i" + str(i)})
+
+
+        ET.SubElement(spine_switch, 'interface', attrib={'name':'ss' + str(spine_switch_counter) + 'ic', 'type':'control'})
+        ET.SubElement(sc, 'interface', attrib={'name':'sciss' + str(spine_switch_counter)})
+        ET.SubElement(links, 'link', attrib={'name': 'lss' + str(spine_switch_counter) + 'c', 'bandwidth':'10Mbps', 'groups':'links', 'a': 'sciss' + str(spine_switch_counter), 'b' : 'ss' + str(spine_switch_counter) + 'ic'})
+
+            #ET.SubElement(spine_switch.set('group', 'switch')
+        #ET.SubElement(spine_switch, 'group').set('group', 'switch')
+
+for aggregation_switch_counter in range(4):
+    aggregation_switch = ET.SubElement(hosts,'node')
+    aggregation_switch.set('name', 'as' + str(aggregation_switch_counter))
+    aggregation_switch.set('groups', 'aggregation_switch switch ofSwitch')
+    ET.SubElement(aggregation_switch, 'group').set('group', 'switch')
+    for i in range(4):
+        ET.SubElement(aggregation_switch, 'interface', attrib={'name': 'as' + str(aggregation_switch_counter) + "i" + str(i)})
+    ET.SubElement(links, 'link',attrib={'name': "las" + str(aggregation_switch_counter) + "ss0",'bandwidth': '10Mbps', 'groups':'links', 'a': "as" + str(aggregation_switch_counter) + "i0", 'b' : "ss0i" + str(aggregation_switch_counter)})
+    ET.SubElement(links, 'link',attrib={'name': "las" + str(aggregation_switch_counter) + "ss1", 'bandwidth': '10Mbps','groups':'links', 'a': "as" + str(aggregation_switch_counter) + "i1", 'b' : "ss1i" + str(aggregation_switch_counter)})
+
+    ET.SubElement(aggregation_switch, 'interface', attrib={'name':'as' + str(aggregation_switch_counter) + 'ic', 'type':'control'})
+    ET.SubElement(sc, 'interface', attrib={'name':'scias' + str(aggregation_switch_counter)})
+    ET.SubElement(links, 'link', attrib={'name': 'las' + str(aggregation_switch_counter) + 'c', 'bandwidth':'10Mbps', 'groups':'links', 'a': 'scias' + str(aggregation_switch_counter), 'b' : 'as' + str(aggregation_switch_counter) + 'ic'})
+
+
+for tor_switch_counter in range(4):
+    tor_switch = ET.SubElement(hosts,'node')
+    tor_switch.set('name', 'tors' + str(tor_switch_counter))
+    for i in range(10):
+        ET.SubElement(tor_switch, 'interface',
+                      attrib={'name': 'tors' + str(tor_switch_counter) + "i" + str(i)})
+
+    tor_switch.set('groups', 'tor_switch switch ofSwitch')
+    ET.SubElement(links, 'link',attrib={'name': "ltors" + str(tor_switch_counter) + "as" + str((tor_switch_counter//2)*2), 'groups':'links', 'a': "tors" + str(tor_switch_counter) + "i0", 'b' : "as" + str((tor_switch_counter//2)*2) + "i" + str(2+tor_switch_counter%2)})
+    ET.SubElement(links, 'link',attrib={'name': "ltors" + str(tor_switch_counter) + "as" + str((tor_switch_counter//2)*2+1), 'groups':'links', 'a': "tors" + str(tor_switch_counter) + "i1", 'b' : "as" + str((tor_switch_counter//2)*2+1) + "i" + str(2+(1+tor_switch_counter)%2)})
+
+    ET.SubElement(tor_switch, 'interface', attrib={'name':'tors' + str(tor_switch_counter) + 'ic', 'type':'control'})
+    ET.SubElement(sc, 'interface', attrib={'name':'scitors' + str(tor_switch_counter)})
+    ET.SubElement(links, 'link', attrib={'name': 'ltors' + str(tor_switch_counter) + 'c', 'bandwidth':'10Mbps', 'groups':'links', 'a': 'scitors' + str(tor_switch_counter), 'b' : 'tors' + str(tor_switch_counter) + 'ic'})
+
+for host_counter in range(32):
+    host = ET.SubElement(hosts, 'node')
+    host.set('name', 'host' + str(host_counter))
+
+    if host_counter < 16: host.set('groups', 'host_left host')
+    else: host.set('groups', 'host_right host')
+    ET.SubElement(host, 'interface',
+                  attrib={'name': 'host' + str(host_counter) + "i0"})
+    ET.SubElement(links, 'link',attrib={'name': "lhost" + str(host_counter) + "tors" + str(int(host_counter / 8)), 'groups':'links', 'a': "host" + str(host_counter) + "i0", 'b' : "tors" + str(int(host_counter / 8)) + "i" + str(host_counter % 8 + 2)})
+
+
+schedule = ET.SubElement(bundle, 'schedule')
+#process = ET.SubElement(schedule, 'process', attrib={'start':'0s', 'fire': 'interval(2s)'})
+ET.SubElement(schedule, "bulk-event", attrib={'start': "0s", "destination": "host16", "source":"sample(host_left)", "max-size":"5Mbyte"})
+ET.SubElement(schedule, "bulk-event", attrib={'start': "0s", "destination": "host16", "source":"sample(host_left)", "max-size":"5Mbyte"})
+ET.SubElement(schedule, "bulk-event", attrib={'start': "0s", "destination": "host16", "source":"sample(host_left)", "max-size":"5Mbyte"})
+ET.SubElement(schedule, "bulk-event", attrib={'start': "0s", "destination": "host16", "source":"sample(host_left)", "max-size":"5Mbyte"})
+ET.SubElement(schedule, "bulk-event", attrib={'start': "0s", "destination": "host16", "source":"sample(host_left)", "max-size":"5Mbyte"})
+ET.SubElement(schedule, "bulk-event", attrib={'start': "0s", "destination": "host16", "source":"sample(host_left)", "max-size":"5Mbyte"})
+ET.SubElement(schedule, "bulk-event", attrib={'start': "0s", "destination": "host16", "source":"sample(host_left)", "max-size":"5Mbyte"})
+ET.SubElement(schedule, "bulk-event", attrib={'start': "0s", "destination": "host16", "source":"sample(host_left)", "max-size":"5Mbyte"})
+ET.SubElement(schedule, "bulk-event", attrib={'start': "0s", "destination": "host16", "source":"sample(host_left)", "max-size":"5Mbyte"})
+
+
+#
+#file.write(xml.dom.minidom.parseString(ET.tostring(bundle)).toprettyxml(indent="\t")'bundle.xml'))
+#    with file=open('bundle.xml')
+ET.ElementTree(bundle).write("bundle.xml")
